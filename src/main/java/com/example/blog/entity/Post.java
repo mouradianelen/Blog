@@ -1,5 +1,7 @@
 package com.example.blog.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +14,8 @@ import java.util.List;
 @Table(name = "post", schema = "blog")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class Post {
 
     @Id
@@ -26,7 +30,7 @@ public class Post {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity author;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Comment> comments = new LinkedList<>();
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "post_category", schema = "blog",

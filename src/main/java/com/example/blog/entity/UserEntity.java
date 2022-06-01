@@ -1,5 +1,7 @@
 package com.example.blog.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Table(name = "user", schema = "blog")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class UserEntity {
 
     @Id
@@ -26,7 +30,7 @@ public class UserEntity {
     private String email;
     @Column
     private Boolean enabled;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Post> posts = new LinkedList<>();
 
     public UserEntity(){

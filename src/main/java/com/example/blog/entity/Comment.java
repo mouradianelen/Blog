@@ -1,5 +1,7 @@
 package com.example.blog.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +12,8 @@ import java.sql.Timestamp;
 @Table(name = "comment", schema = "blog")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,7 +27,6 @@ public class Comment {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
-
 
     public Comment() {
 
