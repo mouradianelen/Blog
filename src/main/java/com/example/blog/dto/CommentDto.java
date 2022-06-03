@@ -13,15 +13,19 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 public class CommentDto {
+    private Long postId;
     private String content;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String authorUsername;
 
     public static CommentDto mapCommentToDto(Comment comment) {
         return CommentDto.builder()
+                .postId(comment.getPost().getId())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
+                .authorUsername(comment.getAuthor().getUsername())
                 .build();
 
     }

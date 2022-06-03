@@ -14,17 +14,20 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 public class PostDto {
+    private Long postId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String text;
     private String author;
-    private List<CommentDto> comments = new LinkedList<>();
+    private List<CommentDto> comments;
 
     public static PostDto mapPostToDto(Post post){
         return PostDto.builder()
+                .postId(post.getId())
                 .text(post.getText())
                 .createdAt(post.getCreatedAt())
                 .author(post.getAuthor().getUsername())
+                .comments(CommentDto.mapCommentToDto(post.getComments()))
                 .build();
     }
 
