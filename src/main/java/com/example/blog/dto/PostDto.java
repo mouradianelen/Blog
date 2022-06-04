@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,9 +31,11 @@ public class PostDto {
     }
 
     public static Post mapDtoToPost(PostDto postDto){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         return Post.builder()
                 .text(postDto.getText())
-                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(timestamp)
+                .updatedAt(timestamp)
                 .build();
     }
     public static List<PostDto> mapPostToDto(List<Post> posts){

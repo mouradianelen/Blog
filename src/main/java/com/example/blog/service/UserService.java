@@ -1,11 +1,9 @@
 package com.example.blog.service;
 
-import com.example.blog.dto.CommentDto;
 import com.example.blog.dto.PostDto;
 import com.example.blog.dto.UserDto;
-import com.example.blog.entity.Post;
 import com.example.blog.entity.UserEntity;
-import com.example.blog.repository.PostRepository;
+import com.example.blog.exception.UserNotFoundException;
 import com.example.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
 
     public UserDto createUser(UserDto userDto){
         UserEntity user = userRepository.save(UserDto.mapDtoToUser(userDto));
@@ -27,17 +24,23 @@ public class UserService {
     }
 
     public UserDto getUser(String username){
-        UserEntity user = userRepository.findByUsername(username);
-        UserDto userDto = UserDto.mapUserToDto(user);
-        List<PostDto> postDtos = PostDto.mapPostToDto(user.getPosts());
-        postDtos.forEach(postDto -> getPost(postDto.getPostId()));
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+        if (user.isEmpty())
+            throw new UserNotFoundException(username);
+        UserDto userDto = UserDto.mapUserToDto(user.get());
+        List<PostDto> postDtos = PostDto.mapPostToDto(user.get().getPosts());
         userDto.setPosts(postDtos);
         return userDto;
     }
-    private void getPost(Long id){
-        Optional<Post> post = postRepository.findById(id);
-        PostDto postDto = PostDto.mapPostToDto(post.get());
-        List<CommentDto> commentDtos = CommentDto.mapCommentToDto(post.get().getComments());
-        postDto.setComments(commentDtos);
+
+    @Transactional
+    public UserDto deleteUser(String username){
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+        if (user.isEmpty())
+            throw new UserNotFoundException(username);
+        UserDto userDto = UserDto.mapUserToDto(user.get());
+        user.get().setEnabled(false);
+        return userDto;
+
     }
 }

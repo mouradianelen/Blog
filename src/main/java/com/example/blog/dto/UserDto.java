@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +17,7 @@ public class UserDto {
     private String lastName;
     private String username;
     private String email;
-    private List<PostDto> posts = new LinkedList<>();
+    private List<PostDto> posts;
 
     public static UserDto mapUserToDto(UserEntity user) {
         return UserDto.builder()
@@ -26,6 +25,7 @@ public class UserDto {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .posts(PostDto.mapPostToDto(user.getPosts()))
                 .build();
     }
 

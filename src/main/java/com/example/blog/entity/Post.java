@@ -27,16 +27,19 @@ public class Post {
     private Timestamp updatedAt;
     @Column
     private String text;
+    @Column
+    private Boolean isActive;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity author;
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "post")
     private List<Comment> comments;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "post_category", schema = "blog",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories = new LinkedList<>();
+
 
     public Post() {
 

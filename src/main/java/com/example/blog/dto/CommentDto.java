@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 public class CommentDto {
+    private Long commentId;
     private Long postId;
     private String content;
     private Timestamp createdAt;
@@ -21,6 +22,7 @@ public class CommentDto {
 
     public static CommentDto mapCommentToDto(Comment comment) {
         return CommentDto.builder()
+                .commentId(comment.getId())
                 .postId(comment.getPost().getId())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
@@ -30,9 +32,11 @@ public class CommentDto {
 
     }
     public static Comment mapDtoToComment(CommentDto commentDto){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         return Comment.builder()
                 .content(commentDto.getContent())
-                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .createdAt(timestamp)
+                .updatedAt(timestamp)
                 .build();
     }
     public static List<CommentDto> mapCommentToDto(List<Comment> comments){

@@ -30,8 +30,8 @@ public class UserEntity {
     private String email;
     @Column
     private Boolean enabled;
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private List<Post> posts = new LinkedList<>();
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "author")
+    private List<Post> posts;
 
     public UserEntity(){
 
