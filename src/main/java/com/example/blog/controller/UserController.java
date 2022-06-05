@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -20,6 +22,10 @@ public class UserController {
     @GetMapping("/{username}")
     public ResponseEntity<UserDto> getUser(@PathVariable("username") String username) {
         return ResponseEntity.ok().body(userService.getUser(username));
+    }
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getUsers(){
+        return ResponseEntity.ok().body(userService.getSortedUsers());
     }
 
     @DeleteMapping("/{username}")

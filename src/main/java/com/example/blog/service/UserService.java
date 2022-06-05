@@ -42,6 +42,9 @@ public class UserService {
         user.get().setEnabled(false);
         user.get().getPosts().forEach(post -> post.setIsActive(false));
         return userDto;
+    }
 
+    public List<UserDto> getSortedUsers(){
+        return UserDto.mapUserToDto(userRepository.findAllSorted());
     }
 }
