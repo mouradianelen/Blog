@@ -48,6 +48,11 @@ public class PostController {
         return ResponseEntity.ok().body(postService.editComment(commentDto, commentId));
     }
 
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<CommentDto> deleteComment(@PathVariable("commentId") Long commentId) {
+        return ResponseEntity.ok().body(postService.deleteComment(commentId));
+    }
+
     @PostMapping("/comments/rate/{commentId}")
     public ResponseEntity<CommentRatingDto> rateComment(@RequestBody CommentRatingDto commentRatingDto,
                                                         @PathVariable("commentId") Long commentId) {
@@ -65,7 +70,6 @@ public class PostController {
                                                      @PathVariable("postId") Long postId) {
         return ResponseEntity.ok().body(postService.addCategoryToPost(categoryDto, postId));
     }
-
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<PostDto> deletePost(@PathVariable("postId") Long postId) {

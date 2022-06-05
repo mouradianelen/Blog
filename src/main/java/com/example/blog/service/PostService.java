@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -99,6 +100,13 @@ public class PostService {
         PostDto postDto = PostDto.mapPostToDto(post.get());
         post.get().setIsActive(false);
         return postDto;
+    }
+    public CommentDto deleteComment(Long commentId){
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        if(comment.isEmpty())
+            throw new CommentNotFoundException(commentId);
+        commentRepository.delete(comment.get());
+        return CommentDto.mapCommentToDto(comment.get());
     }
 
     public CategoryDto createCategory(CategoryDto categoryDto){
