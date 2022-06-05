@@ -17,6 +17,7 @@ public class UserDto {
     private String lastName;
     private String username;
     private String email;
+    private String password;
     private List<PostDto> posts;
 
     public static UserDto mapUserToDto(UserEntity user) {
@@ -30,12 +31,12 @@ public class UserDto {
     }
 
     public static UserEntity mapDtoToUser(UserDto userDto) {
-        return UserEntity.builder()
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
-                .email(userDto.getEmail())
-                .username(userDto.getUsername())
-                .build();
+        UserEntity user = new UserEntity();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setUsername(userDto.getUsername());
+        return user;
     }
 
     public static List<UserDto> mapUserToDto(List<UserEntity> users) {

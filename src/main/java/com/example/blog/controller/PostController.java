@@ -7,6 +7,7 @@ import com.example.blog.dto.PostDto;
 import com.example.blog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    @PreAuthorize("#username == authentication.name or hasRole('ROLE_ADMIN')")
     @PostMapping("/{username}")
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto,
                                               @PathVariable("username") String username) {
@@ -34,6 +36,7 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPostsByUsername(username));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping()
     public ResponseEntity<List<PostDto>> getSortedPosts() {
         return ResponseEntity.ok().body(postService.getSortedPosts());
@@ -50,15 +53,19 @@ public class PostController {
                                                         @PathVariable("commentId") Long commentId) {
         return ResponseEntity.ok().body(postService.rateComment(commentRatingDto, commentId));
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/categories")
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto){
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
         return ResponseEntity.ok().body(postService.createCategory(categoryDto));
     }
+
     @PostMapping("/add-category/{postId}")
     public ResponseEntity<PostDto> addCategoryToPost(@RequestBody CategoryDto categoryDto,
-                                                     @PathVariable("postId") Long postId){
-        return ResponseEntity.ok().body(postService.addCategoryToPost(categoryDto,postId));
+                                                     @PathVariable("postId") Long postId) {
+        return ResponseEntity.ok().body(postService.addCategoryToPost(categoryDto, postId));
     }
+
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<PostDto> deletePost(@PathVariable("postId") Long postId) {

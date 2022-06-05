@@ -2,10 +2,15 @@ package com.example.blog.service;
 
 import com.example.blog.dto.PostDto;
 import com.example.blog.dto.UserDto;
+import com.example.blog.entity.Role;
 import com.example.blog.entity.UserEntity;
+import com.example.blog.exception.EmailAlreadyExistsException;
 import com.example.blog.exception.UserNotFoundException;
+import com.example.blog.exception.UsernameAlreadyExistsException;
+import com.example.blog.repository.RoleRepository;
 import com.example.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     public UserDto createUser(UserDto userDto) {
         UserEntity user = userRepository.save(UserDto.mapDtoToUser(userDto));
@@ -44,7 +51,28 @@ public class UserService {
         return userDto;
     }
 
-    public List<UserDto> getSortedUsers(){
+    public List<UserDto> getSortedUsers() {
         return UserDto.mapUserToDto(userRepository.findAllSorted());
+    }
+
+    @Transactional
+    public UserDto registerNewUserAccount(UserDto userDTO) {
+
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException(userDTO.getEmail());
+        }
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistsException(userDTO.getUsername());
+        }
+
+        UserEntity user = UserDto.mapDtoToUser(userDTO);
+        System.out.println(user.getUsername());
+
+        Role role = roleRepository.findByName("ROLE_USER");
+        System.out.println(role.getName());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setEnabled(true);
+        user.getRoles().add(role);
+        return UserDto.mapUserToDto(userRepository.save(user));
     }
 }

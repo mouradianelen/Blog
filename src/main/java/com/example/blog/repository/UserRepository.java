@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query(value = "select * from blog.user u where u.enabled = true " +
             "order by u.id desc", nativeQuery = true)
     List<UserEntity> findAllSorted();
+    @Query(value = "select * from blog.user u where u.enabled = true and u.email =:email",nativeQuery = true)
+    Optional<UserEntity> findByEmail(String email);
 }
