@@ -17,13 +17,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserDto createUser(UserDto userDto){
+    public UserDto createUser(UserDto userDto) {
         UserEntity user = userRepository.save(UserDto.mapDtoToUser(userDto));
         user.setEnabled(true);
         return UserDto.mapUserToDto(user);
     }
 
-    public UserDto getUser(String username){
+    public UserDto getUser(String username) {
         Optional<UserEntity> user = userRepository.findByUsername(username);
         if (user.isEmpty())
             throw new UserNotFoundException(username);
@@ -34,12 +34,13 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto deleteUser(String username){
+    public UserDto deleteUser(String username) {
         Optional<UserEntity> user = userRepository.findByUsername(username);
         if (user.isEmpty())
             throw new UserNotFoundException(username);
         UserDto userDto = UserDto.mapUserToDto(user.get());
         user.get().setEnabled(false);
+        user.get().getPosts().forEach(post -> post.setIsActive(false));
         return userDto;
 
     }

@@ -1,6 +1,5 @@
 package com.example.blog.entity;
 
-import com.example.blog.exception.RatingOutOfBoundsException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

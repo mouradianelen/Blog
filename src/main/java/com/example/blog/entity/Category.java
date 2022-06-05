@@ -1,5 +1,7 @@
 package com.example.blog.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @Table(name = "category", schema = "blog")
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,20 +1,12 @@
 package com.example.blog.service;
 
+import com.example.blog.dto.CategoryDto;
 import com.example.blog.dto.CommentDto;
 import com.example.blog.dto.CommentRatingDto;
 import com.example.blog.dto.PostDto;
-import com.example.blog.entity.Comment;
-import com.example.blog.entity.CommentRating;
-import com.example.blog.entity.Post;
-import com.example.blog.entity.UserEntity;
-import com.example.blog.exception.CommentNotFoundException;
-import com.example.blog.exception.PostNotFoundException;
-import com.example.blog.exception.RatingOutOfBoundsException;
-import com.example.blog.exception.UserNotFoundException;
-import com.example.blog.repository.CommentRatingRepository;
-import com.example.blog.repository.CommentRepository;
-import com.example.blog.repository.PostRepository;
-import com.example.blog.repository.UserRepository;
+import com.example.blog.entity.*;
+import com.example.blog.exception.*;
+import com.example.blog.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +22,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final CommentRatingRepository commentRatingRepository;
+    private final CategoryRepository categoryRepository;
 
     public PostDto createPost(PostDto postDto, String username) {
         Post post = PostDto.mapDtoToPost(postDto);
@@ -96,6 +89,34 @@ public class PostService {
         commentRatingRepository.save(commentRating);
         return commentRatingDto;
 
+    }
+
+    @Transactional
+    public PostDto deletePost(Long postId) {
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty())
+            throw new PostNotFoundException(postId);
+        PostDto postDto = PostDto.mapPostToDto(post.get());
+        post.get().setIsActive(false);
+        return postDto;
+    }
+
+    public CategoryDto createCategory(CategoryDto categoryDto){
+        if(categoryRepository.existsByTitle(categoryDto.getTitle()))
+            return CategoryDto.mapCategoryToDto(categoryRepository.findByTitle(categoryDto.getTitle()));
+        Category category = CategoryDto.mapDtoToCategory(categoryDto);
+        return CategoryDto.mapCategoryToDto(categoryRepository.save(category));
+    }
+
+    @Transactional
+    public PostDto addCategoryToPost(CategoryDto categoryDto, Long postId){
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty())
+            throw new PostNotFoundException(postId);
+        if(!categoryRepository.existsByTitle(categoryDto.getTitle()))
+            throw new NoSuchCategoryException(categoryDto.getTitle());
+        post.get().getCategories().add(categoryRepository.findByTitle(categoryDto.getTitle()));
+        return PostDto.mapPostToDto(post.get());
     }
 
 }

@@ -31,7 +31,8 @@ public class CommentDto {
                 .build();
 
     }
-    public static Comment mapDtoToComment(CommentDto commentDto){
+
+    public static Comment mapDtoToComment(CommentDto commentDto) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         return Comment.builder()
                 .content(commentDto.getContent())
@@ -39,10 +40,12 @@ public class CommentDto {
                 .updatedAt(timestamp)
                 .build();
     }
-    public static List<CommentDto> mapCommentToDto(List<Comment> comments){
+
+    public static List<CommentDto> mapCommentToDto(List<Comment> comments) {
         return comments.stream().map(CommentDto::mapCommentToDto).collect(Collectors.toList());
     }
-    public static List<Comment> mapDtoToComment(List<CommentDto> commentDtos){
+
+    public static List<Comment> mapDtoToComment(List<CommentDto> commentDtos) {
         return commentDtos.stream().map(CommentDto::mapDtoToComment).collect(Collectors.toList());
     }
 }

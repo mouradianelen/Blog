@@ -20,7 +20,7 @@ public class PostDto {
     private String author;
     private List<CommentDto> comments;
 
-    public static PostDto mapPostToDto(Post post){
+    public static PostDto mapPostToDto(Post post) {
         return PostDto.builder()
                 .postId(post.getId())
                 .text(post.getText())
@@ -30,7 +30,7 @@ public class PostDto {
                 .build();
     }
 
-    public static Post mapDtoToPost(PostDto postDto){
+    public static Post mapDtoToPost(PostDto postDto) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         return Post.builder()
                 .text(postDto.getText())
@@ -38,10 +38,12 @@ public class PostDto {
                 .updatedAt(timestamp)
                 .build();
     }
-    public static List<PostDto> mapPostToDto(List<Post> posts){
+
+    public static List<PostDto> mapPostToDto(List<Post> posts) {
         return posts.stream().map(PostDto::mapPostToDto).collect(Collectors.toList());
     }
-    public static List<Post> mapDtoToPost(List<PostDto> postDtos){
+
+    public static List<Post> mapDtoToPost(List<PostDto> postDtos) {
         return postDtos.stream().map(PostDto::mapDtoToPost).collect(Collectors.toList());
     }
 }

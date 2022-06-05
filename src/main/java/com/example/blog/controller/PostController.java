@@ -1,5 +1,6 @@
 package com.example.blog.controller;
 
+import com.example.blog.dto.CategoryDto;
 import com.example.blog.dto.CommentDto;
 import com.example.blog.dto.CommentRatingDto;
 import com.example.blog.dto.PostDto;
@@ -34,21 +35,35 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<PostDto>> getSortedPosts(){
+    public ResponseEntity<List<PostDto>> getSortedPosts() {
         return ResponseEntity.ok().body(postService.getSortedPosts());
     }
 
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<CommentDto> editComment(@RequestBody CommentDto commentDto,
-                                                  @PathVariable("commentId") Long commentId){
-        return ResponseEntity.ok().body(postService.editComment(commentDto,commentId));
-    }
-    @PostMapping("comments/rate/{commentId}")
-    public ResponseEntity<CommentRatingDto> rateComment(@RequestBody CommentRatingDto commentRatingDto,
-                                                        @PathVariable("commentId") Long commentId){
-        return ResponseEntity.ok().body(postService.rateComment(commentRatingDto,commentId));
+                                                  @PathVariable("commentId") Long commentId) {
+        return ResponseEntity.ok().body(postService.editComment(commentDto, commentId));
     }
 
+    @PostMapping("/comments/rate/{commentId}")
+    public ResponseEntity<CommentRatingDto> rateComment(@RequestBody CommentRatingDto commentRatingDto,
+                                                        @PathVariable("commentId") Long commentId) {
+        return ResponseEntity.ok().body(postService.rateComment(commentRatingDto, commentId));
+    }
+    @PostMapping("/categories")
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto){
+        return ResponseEntity.ok().body(postService.createCategory(categoryDto));
+    }
+    @PostMapping("/add-category/{postId}")
+    public ResponseEntity<PostDto> addCategoryToPost(@RequestBody CategoryDto categoryDto,
+                                                     @PathVariable("postId") Long postId){
+        return ResponseEntity.ok().body(postService.addCategoryToPost(categoryDto,postId));
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<PostDto> deletePost(@PathVariable("postId") Long postId) {
+        return ResponseEntity.ok().body(postService.deletePost(postId));
+    }
 
 
 }

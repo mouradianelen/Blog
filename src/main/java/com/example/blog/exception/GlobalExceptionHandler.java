@@ -23,4 +23,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleRatingNumber(RatingOutOfBoundsException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(NoSuchCategoryException.class)
+    public ResponseEntity<Object> handleNoSuchCategoryException(NoSuchCategoryException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
